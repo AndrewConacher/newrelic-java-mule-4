@@ -11,7 +11,7 @@ dependencies {
     compile 'com.newrelic.agent.java:newrelic-api:4.7.0'
     compile 'com.newrelic.agent.java:newrelic-weaver-api:4.7.0'
 
-    //compile 'com.newrelic.agent.java:agent-bridge:3.29.0'
+    compile 'com.newrelic.agent.java:agent-bridge:4.7.0'
    compile fileTree(dir: 'lib', includes: ['*.jar'])
 }
 

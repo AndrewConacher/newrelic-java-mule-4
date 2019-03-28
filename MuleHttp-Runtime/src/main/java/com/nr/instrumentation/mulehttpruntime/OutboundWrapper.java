@@ -1,4 +1,4 @@
-package com.nr.instrumentation.mulehttp;
+package com.nr.instrumentation.mulehttpruntime;
 
 import org.mule.runtime.http.api.domain.message.response.HttpResponse;
 
