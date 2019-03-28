@@ -1,7 +1,6 @@
 package org.mule.runtime.core.internal.execution;
 
 import java.util.function.Consumer;
-import java.util.logging.Level;
 
 import org.mule.runtime.core.api.construct.FlowConstruct;
 import org.mule.runtime.core.api.event.CoreEvent;
@@ -50,7 +49,6 @@ public abstract class ModuleFlowProcessingPhase {
 					token = null;
 				}
 			}
-			NewRelic.getAgent().getLogger().log(Level.FINE, "ModuleFlowProcessingPhase.FlowProcessor.process: {0}.process({1}) returning {2}", getClass().getName(),event,returned);
 			return returned;
 		}
 		

@@ -1,8 +1,5 @@
 package org.mule.runtime.core.internal.event;
 
-import java.util.logging.Level;
-
-import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.internal.message.InternalEvent;
 import org.mule.runtime.core.privileged.store.DeserializationPostInitialisable;
 
@@ -51,11 +48,7 @@ public abstract class DefaultEventBuilder {
 		
 		@WeaveAllConstructors
 		public InternalEventImplementation() {
-			NewRelic.getAgent().getLogger().log(Level.FINE, new Exception("Constructing InternalEventImplementation"), "Call to InternalEventImplementation.<init>");
 		}
 		
-		public String toString() {
-			return Weaver.callOriginal() + ", token = " + token;
-		}
 	}
 }

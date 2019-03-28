@@ -2,7 +2,6 @@ package org.mule.runtime.core.internal.event;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Level;
 
 import org.mule.runtime.core.api.event.CoreEvent;
 import org.mule.runtime.core.api.exception.FlowExceptionHandler;
@@ -33,8 +32,6 @@ abstract class AbstractEventContext  implements BaseEventContext {
 	}
 
 	public AbstractEventContext(FlowExceptionHandler exceptionHandler, int depthLevel,Optional<CompletableFuture<Void>> externalCompletion) {
-		Exception e = new Exception("Constructing AbstractEventContext" );
-		NewRelic.getAgent().getLogger().log(Level.FINE, e, "AbstractEventContext.<init>({0},{1},{2})",exceptionHandler,depthLevel,externalCompletion);
 		token = NewRelic.getAgent().getTransaction().getToken();
 		NRBiConsumerEvent nrConsumer = new NRBiConsumerEvent(token);
 		onComplete(nrConsumer);
@@ -74,7 +71,4 @@ abstract class AbstractEventContext  implements BaseEventContext {
 		return Weaver.callOriginal();
 	}
 
-	private boolean isResponseDone() {
-		return Weaver.callOriginal();
-	}
 }

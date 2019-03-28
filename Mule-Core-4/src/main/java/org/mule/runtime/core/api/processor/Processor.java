@@ -1,10 +1,7 @@
 package org.mule.runtime.core.api.processor;
 
-import java.util.logging.Level;
-
 import org.mule.runtime.core.api.event.CoreEvent;
 
-import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Token;
 import com.newrelic.api.agent.Trace;
 import com.newrelic.api.agent.weaver.MatchType;
@@ -34,7 +31,6 @@ public abstract class Processor {
 			MuleUtils.removeToken(returnedEvent);
 			
 		}
-		NewRelic.getAgent().getLogger().log(Level.FINE, "Processor.process: {0}.process({1}) returning {2}, {3}", getClass().getName(),event,returnedEvent,MuleUtils.hasToken(returnedEvent) ? "has token"  :  "has not token");
 		return returnedEvent;
 	}
 	
