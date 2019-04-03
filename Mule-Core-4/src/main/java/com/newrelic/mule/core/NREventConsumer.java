@@ -23,10 +23,10 @@ public class NREventConsumer implements Consumer<CoreEvent> {
 	@Override
 	@Trace(async=true)
 	public void accept(CoreEvent t) {
-		if(MuleUtils.hasToken(t)) {
-			Token token = MuleUtils.getToken(t);
-			token.linkAndExpire();
-			MuleUtils.removeToken(t);
+		String corrId = t.getCorrelationId();
+		if(MuleUtils.hasToken(corrId)) {
+			Token token = MuleUtils.getToken(corrId);
+			token.link();
 		}
 	}
 

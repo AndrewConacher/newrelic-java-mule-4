@@ -10,7 +10,7 @@ import com.newrelic.api.agent.weaver.Weaver;
 @Weave
 public abstract class PhaseExecutionEngine {
 
-	@Trace(dispatcher=true)
+	@Trace
 	public void process(MessageProcessTemplate messageProcessTemplate, MessageProcessContext messageProcessContext) {
 		Weaver.callOriginal();
 	}

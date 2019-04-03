@@ -16,11 +16,10 @@ import com.newrelic.api.agent.weaver.NewField;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
 import com.newrelic.mule.core.MuleUtils;
-import com.newrelic.mule.core.NRBiConsumerEvent;
 
 @Weave(type=MatchType.BaseClass)
 abstract class AbstractEventContext  implements BaseEventContext {
-
+	
 	@NewField
 	public Token token = null;
 
@@ -33,14 +32,16 @@ abstract class AbstractEventContext  implements BaseEventContext {
 
 	public AbstractEventContext(FlowExceptionHandler exceptionHandler, int depthLevel,Optional<CompletableFuture<Void>> externalCompletion) {
 		token = NewRelic.getAgent().getTransaction().getToken();
-		NRBiConsumerEvent nrConsumer = new NRBiConsumerEvent(token);
-		onComplete(nrConsumer);
-		onTerminated(nrConsumer);
-		onResponse(nrConsumer);
 	}
 
 	@Trace(async=true)
 	public void success() {
+		String contextCorrId = getCorrelationId();
+		if(MuleUtils.hasToken(contextCorrId)) {
+			Token token2 = MuleUtils.removeToken(contextCorrId);
+			token2.linkAndExpire();
+			token2 = null;
+		}
 		if(token != null) {
 			token.linkAndExpire();
 			token = null;
@@ -50,9 +51,16 @@ abstract class AbstractEventContext  implements BaseEventContext {
 
 	@Trace(async=true)
 	public void success(CoreEvent event) {
-		if(MuleUtils.hasToken(event)) {
-			MuleUtils.getToken(event).expire();
-			MuleUtils.removeToken(event);
+		
+		String corrId = event.getCorrelationId();
+		String contextCorrId = getCorrelationId();
+		
+		if(MuleUtils.hasToken(corrId)) {
+			MuleUtils.getToken(corrId).expire();
+			MuleUtils.removeToken(corrId);
+		} else if(MuleUtils.hasToken(contextCorrId)) {
+			MuleUtils.getToken(contextCorrId).expire();
+			MuleUtils.removeToken(contextCorrId);
 		}
 		if(token != null) {
 			token.linkAndExpire();
@@ -63,6 +71,12 @@ abstract class AbstractEventContext  implements BaseEventContext {
 
 	@Trace(async=true)
 	public Publisher<Void> error(Throwable throwable) {
+		String contextCorrId = getCorrelationId();
+		if(MuleUtils.hasToken(contextCorrId)) {
+			Token token2 = MuleUtils.removeToken(contextCorrId);
+			token2.linkAndExpire();
+			token2 = null;
+		}
 		if(token != null) {
 			token.linkAndExpire();
 			token = null;
