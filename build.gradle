@@ -30,8 +30,8 @@ subprojects {
 
   dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile 'com.newrelic.agent.java:instrumentation-test:3.SNAPSHOT_3.26.0.PR1'
-    testCompile 'com.newrelic.agent.java:newrelic-agent:3.SNAPSHOT_3.26.0.PR1'
+    testCompile 'com.newrelic.agent.java:instrumentation-test:4.7.0'
+    testCompile 'com.newrelic.agent.java:newrelic-agent:4.7.0'
   }
 
   task install(dependsOn: jar, type: Copy) {
