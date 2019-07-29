@@ -13,25 +13,23 @@ import reactor.core.CoreSubscriber;
 import reactor.util.context.Context;
 
 public class NRCoreSubscriber<T> implements CoreSubscriber<T> {
-	
+
 	private CoreSubscriber<T> delegate = null;
 	private static boolean isTransformed = false;
-	
+
 	public NRCoreSubscriber(CoreSubscriber<T> cs) {
-		
+
 		delegate = cs;
 		if(!isTransformed) {
 			isTransformed = true;
 			AgentBridge.instrumentation.retransformUninstrumentedClass(getClass());
 		}
 	}
-	
 
 	public Context currentContext()
 	{
 		return this.delegate.currentContext();
 	}
-
 
 	@Override
 	@Trace(async=true)
