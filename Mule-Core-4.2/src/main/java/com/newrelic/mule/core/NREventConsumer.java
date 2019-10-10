@@ -3,6 +3,7 @@ package com.newrelic.mule.core;
 import java.util.function.Consumer;
 
 import org.mule.runtime.core.api.event.CoreEvent;
+import org.mule.runtime.core.internal.event.MuleUtils;
 
 import com.newrelic.agent.bridge.AgentBridge;
 import com.newrelic.api.agent.Token;
@@ -11,7 +12,6 @@ import com.newrelic.api.agent.Trace;
 public class NREventConsumer implements Consumer<CoreEvent> {
 	
 	private static boolean isTransformed = false;
-	
 	
 	public NREventConsumer() {
 		if(!isTransformed) {
@@ -22,10 +22,9 @@ public class NREventConsumer implements Consumer<CoreEvent> {
 	
 	@Override
 	@Trace(async=true)
-	public void accept(CoreEvent t) {
-		String corrId = t.getCorrelationId();
-		if(MuleUtils.hasToken(corrId)) {
-			Token token = MuleUtils.getToken(corrId);
+	public void accept(CoreEvent event) {
+		Token token = MuleUtils.getToken(event);
+		if(token != null) {
 			token.link();
 		}
 	}

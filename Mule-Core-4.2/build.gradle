@@ -15,7 +15,7 @@ dependencies {
 jar {
     manifest {
         attributes 'Implementation-Title': 'com.newrelic.instrumentation.Mule-Core-4.2'
-        attributes 'Implementation-Vendor': 'com.newrelic', 'Implementation-Version': 1.0
+        attributes 'Implementation-Vendor': 'com.newrelic', 'Implementation-Version': 2.0
     }
 }
 
