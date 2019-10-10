@@ -1,6 +1,8 @@
 package org.mule.service.http.impl.service.server.grizzly;
 
 
+import org.glassfish.grizzly.http.HttpResponsePacket;
+
 import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Token;
 import com.newrelic.api.agent.Trace;
@@ -15,7 +17,9 @@ public abstract class ResponseCompletionHandler {
 
 	@NewField
 	private Token token = null;
-	
+
+	private final HttpResponsePacket httpResponsePacket = Weaver.callOriginal();
+
 
 	@WeaveAllConstructors
 	public ResponseCompletionHandler() {
@@ -28,6 +32,7 @@ public abstract class ResponseCompletionHandler {
 			token.linkAndExpire();
 			token = null;
 		}
+		NewRelic.getAgent().getTransaction().setWebResponse(new ResponseWrapper(httpResponsePacket));
 		Weaver.callOriginal();
 	}
 	
@@ -37,6 +42,7 @@ public abstract class ResponseCompletionHandler {
 			token.linkAndExpire();
 			token = null;
 		}
+		NewRelic.getAgent().getTransaction().setWebResponse(new ResponseWrapper(httpResponsePacket));
 		Weaver.callOriginal();
 	}
 	
@@ -48,6 +54,7 @@ public abstract class ResponseCompletionHandler {
 			token.linkAndExpire();
 			token = null;
 		}
+		NewRelic.getAgent().getTransaction().setWebResponse(new ResponseWrapper(httpResponsePacket));
 		Weaver.callOriginal();
 	}
 
