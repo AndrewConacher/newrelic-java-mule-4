@@ -16,7 +16,9 @@ import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.NewField;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
+import com.newrelic.mule.core.NRFlux;
 
+import reactor.core.publisher.Flux;
 import reactor.util.context.Context;
 
 @Weave(type=MatchType.BaseClass)
@@ -30,6 +32,19 @@ class AbstractMessageProcessorChain {
 			chainName = name;
 		}
 	}
+	
+	@Trace(dispatcher=true)
+	public Publisher<CoreEvent> apply(final Publisher<CoreEvent> publisher) {
+		Publisher<CoreEvent> result = Weaver.callOriginal();
+		NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","MuleProcessorChain",getClass().getSimpleName(),"apply",chainName});
+		if(Flux.class.isInstance(result)) {
+			Flux<CoreEvent> flux = (Flux<CoreEvent>)result;
+			NRFlux wrapper = new NRFlux(flux);
+			result = (Publisher<CoreEvent>)wrapper;
+		}
+		return result;
+	}
+	
 
 	@Trace(dispatcher=true)
 	public CoreEvent process(final CoreEvent event) {
@@ -39,10 +54,9 @@ class AbstractMessageProcessorChain {
 	}
 	
 	
-	@SuppressWarnings("unused")
+	@Trace
 	private Function<? super Publisher<CoreEvent>, ? extends Publisher<CoreEvent>> doOnNextOrErrorWithContext(final Consumer<Context> contextConsumer) {
 		Function<? super Publisher<CoreEvent>, ? extends Publisher<CoreEvent>> f = Weaver.callOriginal();
-		
 		return f;
 	}
 }

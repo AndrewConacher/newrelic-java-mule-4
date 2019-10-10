@@ -3,6 +3,7 @@ package org.mule.runtime.core.internal.event;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import org.mule.runtime.api.event.EventContext;
 import org.mule.runtime.core.api.event.CoreEvent;
 import org.mule.runtime.core.api.exception.FlowExceptionHandler;
 import org.mule.runtime.core.privileged.event.BaseEventContext;
@@ -15,7 +16,6 @@ import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.NewField;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
-import com.newrelic.mule.core.MuleUtils;
 
 @Weave(type=MatchType.BaseClass)
 abstract class AbstractEventContext  implements BaseEventContext {
@@ -34,53 +34,60 @@ abstract class AbstractEventContext  implements BaseEventContext {
 		token = NewRelic.getAgent().getTransaction().getToken();
 	}
 
+	public abstract Optional<BaseEventContext> getParentContext();
+
 	@Trace(async=true)
 	public void success() {
-		String contextCorrId = getCorrelationId();
-		if(MuleUtils.hasToken(contextCorrId)) {
-			Token token2 = MuleUtils.removeToken(contextCorrId);
-			token2.linkAndExpire();
-			token2 = null;
-		}
 		if(token != null) {
 			token.linkAndExpire();
 			token = null;
 		}
+		expireParent(getParentContext());
 		Weaver.callOriginal();
+	}
+	
+	private void expireParent(Optional<BaseEventContext> parent) {
+		if(parent.isPresent()) {
+			BaseEventContext parentCtx = parent.get();
+			if(parentCtx != null && (AbstractEventContext.class.isInstance(parentCtx))) {
+				AbstractEventContext aCtx = (AbstractEventContext)parentCtx;
+				if(aCtx.token != null) {
+					aCtx.token.expire();
+					aCtx.token = null;
+				}
+				
+			}
+		}
 	}
 
 	@Trace(async=true)
 	public void success(CoreEvent event) {
-		
-		String corrId = event.getCorrelationId();
-		String contextCorrId = getCorrelationId();
-		
-		if(MuleUtils.hasToken(corrId)) {
-			MuleUtils.getToken(corrId).expire();
-			MuleUtils.removeToken(corrId);
-		} else if(MuleUtils.hasToken(contextCorrId)) {
-			MuleUtils.getToken(contextCorrId).expire();
-			MuleUtils.removeToken(contextCorrId);
-		}
 		if(token != null) {
 			token.linkAndExpire();
 			token = null;
+		} else {
+			
+			EventContext ctx = event.getContext();
+			if(AbstractEventContext.class.isInstance(ctx)) {
+				AbstractEventContext bctx = (AbstractEventContext)ctx;
+				if(bctx.token != null) {
+					bctx.token.linkAndExpire();
+					bctx.token = null;
+				}
+				expireParent(bctx.getParentContext());
+			}
 		}
+		expireParent(getParentContext());
 		Weaver.callOriginal();
 	}
 
 	@Trace(async=true)
 	public Publisher<Void> error(Throwable throwable) {
-		String contextCorrId = getCorrelationId();
-		if(MuleUtils.hasToken(contextCorrId)) {
-			Token token2 = MuleUtils.removeToken(contextCorrId);
-			token2.linkAndExpire();
-			token2 = null;
-		}
 		if(token != null) {
 			token.linkAndExpire();
 			token = null;
 		}
+		expireParent(getParentContext());
 		NewRelic.noticeError(throwable);
 		return Weaver.callOriginal();
 	}

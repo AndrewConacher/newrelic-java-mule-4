@@ -9,11 +9,8 @@ import org.mule.runtime.core.api.event.CoreEvent;
 import org.mule.runtime.core.internal.policy.PolicyManager;
 import org.mule.runtime.core.privileged.execution.MessageProcessContext;
 
-import com.newrelic.api.agent.NewRelic;
-import com.newrelic.api.agent.Token;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
-import com.newrelic.mule.core.MuleUtils;
 import com.newrelic.mule.core.NRBiConsumer;
 import com.newrelic.mule.core.NREventConsumer;
 
@@ -35,14 +32,10 @@ public abstract class ModuleFlowProcessingPhase {
 			ComponentLocation sourceLocation, CompletableFuture responseCompletion,
 			 FlowConstruct flowConstruct) {
 		
-		NRBiConsumer<?,?> nrConsumer = new NRBiConsumer(NewRelic.getAgent().getTransaction().getToken(),flowConstruct.getName() != null ? flowConstruct.getName() : null);
+		NRBiConsumer<?,?> nrConsumer = new NRBiConsumer(flowConstruct.getName() != null ? flowConstruct.getName() : null);
 		responseCompletion = responseCompletion.whenComplete(nrConsumer);
 		CoreEvent event = Weaver.callOriginal();
 		String corrId = event.getCorrelationId();
-		if(!MuleUtils.hasToken(corrId)) {
-			Token token = NewRelic.getAgent().getTransaction().getToken();
-			MuleUtils.addToken(corrId, token);
-		}
 		return event;
 	}
 	
