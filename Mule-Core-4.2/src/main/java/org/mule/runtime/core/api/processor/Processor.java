@@ -20,7 +20,6 @@ public abstract class Processor {
 		}
 		CoreEvent returnedEvent = Weaver.callOriginal();
 		
-		//MuleUtils.setToken(returnedEvent, token);
 		return returnedEvent;
 	}
 	

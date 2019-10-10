@@ -61,6 +61,7 @@ public abstract class PhaseExecutionEngine {
 			Weaver.callOriginal();
 		}
 		
+		@SuppressWarnings("unused")
 		private void processEndPhase() {
 			segment.end();
 			Weaver.callOriginal();

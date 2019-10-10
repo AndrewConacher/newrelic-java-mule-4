@@ -1,14 +1,9 @@
 package com.newrelic.mule.core;
 
 import java.util.function.Function;
-import java.util.logging.Level;
 
 import com.newrelic.agent.bridge.AgentBridge;
-import com.newrelic.api.agent.NewRelic;
-import com.newrelic.api.agent.Token;
 import com.newrelic.api.agent.Trace;
-
-import reactor.core.publisher.Flux;
 
 public class NRWrapperFunction<T,U> implements Function<T, U> {
 

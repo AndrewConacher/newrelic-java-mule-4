@@ -11,11 +11,10 @@ public abstract class DefaultEventBuilder {
 	
 	public InternalEvent build() {
 		InternalEvent event = Weaver.callOriginal();
+		
 		String  corrId = event.getCorrelationId();
 		
 		NewRelic.addCustomParameter("CorrelationId", corrId);
-		
-		
 		return event;
 		
 	}

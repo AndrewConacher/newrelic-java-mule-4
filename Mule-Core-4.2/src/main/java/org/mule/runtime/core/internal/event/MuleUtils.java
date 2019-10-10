@@ -2,7 +2,6 @@ package org.mule.runtime.core.internal.event;
 
 import org.mule.runtime.api.event.EventContext;
 import org.mule.runtime.core.api.event.CoreEvent;
-import org.mule.runtime.core.privileged.event.BaseEventContext;
 
 import com.newrelic.agent.bridge.NoOpToken;
 import com.newrelic.api.agent.Token;

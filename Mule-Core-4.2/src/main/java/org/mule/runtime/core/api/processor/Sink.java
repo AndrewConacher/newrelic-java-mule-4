@@ -12,7 +12,6 @@ import com.newrelic.api.agent.weaver.Weaver;
 @Weave(type=MatchType.Interface)
 public abstract class Sink {
 
-
 	@Trace(async=true)
 	public boolean emit(CoreEvent event) {
 		Token token = MuleUtils.getToken(event);

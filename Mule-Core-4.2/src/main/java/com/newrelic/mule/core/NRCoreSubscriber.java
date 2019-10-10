@@ -2,10 +2,8 @@ package com.newrelic.mule.core;
 
 import java.util.logging.Level;
 
-import org.mule.runtime.api.event.EventContext;
 import org.mule.runtime.core.api.event.CoreEvent;
 import org.mule.runtime.core.internal.event.MuleUtils;
-import org.mule.runtime.core.privileged.event.BaseEventContext;
 import org.reactivestreams.Subscription;
 
 import com.newrelic.agent.bridge.AgentBridge;

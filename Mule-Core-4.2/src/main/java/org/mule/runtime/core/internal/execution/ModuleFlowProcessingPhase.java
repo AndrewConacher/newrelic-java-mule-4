@@ -6,11 +6,9 @@ import java.util.function.Consumer;
 import org.mule.runtime.core.api.construct.FlowConstruct;
 import org.mule.runtime.core.api.event.CoreEvent;
 import org.mule.runtime.core.api.source.MessageSource;
-import org.mule.runtime.core.internal.event.MuleUtils;
 import org.mule.runtime.core.internal.policy.PolicyManager;
 import org.mule.runtime.core.privileged.execution.MessageProcessContext;
 
-import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
 import com.newrelic.mule.core.NRBiConsumer;
@@ -37,16 +35,13 @@ public abstract class ModuleFlowProcessingPhase {
 		NRBiConsumer nrConsumer = new NRBiConsumer(flowConstruct.getName() != null ? flowConstruct.getName() : null);
 		responseCompletion = responseCompletion.whenComplete(nrConsumer);
 		CoreEvent event = Weaver.callOriginal();
-//		MuleUtils.setToken(event, NewRelic.getAgent().getTransaction().getToken());
 		return event;
 	}
 	
 	@SuppressWarnings("unused")
 	private Consumer<CoreEvent> onMessageReceived(ModuleFlowProcessingPhaseTemplate template,MessageProcessContext messageProcessContext, FlowConstruct flowConstruct) {
 		Consumer<CoreEvent> consumer = Weaver.callOriginal();
-		
 		NREventConsumer nrConsumer = new NREventConsumer();
-		
 		return nrConsumer.andThen(consumer);
 	}
 	
