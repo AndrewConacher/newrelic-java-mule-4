@@ -1,38 +1,33 @@
-package com.newrelic.mule.core;
+package org.mule.runtime.core.internal.event;
 
-import java.util.HashMap;
-import java.util.logging.Level;
+import org.mule.runtime.api.event.EventContext;
+import org.mule.runtime.core.api.event.CoreEvent;
 
 import com.newrelic.agent.bridge.NoOpToken;
-import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Token;
 
 public class MuleUtils {
 
-	private static HashMap<String,Token> tokenCache = new HashMap<String, Token>();
-	
-	public static boolean hasToken(String corrId) {
-		boolean result = tokenCache.containsKey(corrId);
-		return result;
+	public static Token getToken(CoreEvent event) {
+		EventContext context = event.getContext();
+		if(AbstractEventContext.class.isInstance(context)) {
+			return ((AbstractEventContext)context).token;
+		} 
+		return null;
 	}
 	
-	public static Token getToken(String corrId) {
-		Token token = tokenCache.get(corrId);
-		return token;
-	}
-	
-	public static void addToken(String corrId, Token token) {
+	public static void setToken(CoreEvent event,Token token) {
+		
 		if(NoOpToken.class.isInstance(token)) {
 			return;
 		}
-		tokenCache.put(corrId, token);
-	}
-	
-	public static Token removeToken(String corrId) {
-		Token token = tokenCache.remove(corrId);
-		
-		return token;
-	}
-	
-	
+		EventContext context = event.getContext();
+		if(AbstractEventContext.class.isInstance(context)) {
+			AbstractEventContext dEvent = (AbstractEventContext)context;
+			if(dEvent.token == null) {
+				dEvent.token = token;
+			}
+		}
+			
+	}	
 }

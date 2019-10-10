@@ -1,59 +1,53 @@
-package com.nr.instrumentation.mule.reactor;
+package com.newrelic.mule.core;
+
+import java.util.logging.Level;
 
 import org.mule.runtime.core.api.event.CoreEvent;
+import org.mule.runtime.core.internal.event.MuleUtils;
 import org.reactivestreams.Subscription;
 
 import com.newrelic.agent.bridge.AgentBridge;
 import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Token;
 import com.newrelic.api.agent.Trace;
-import com.newrelic.mule.core.MuleUtils;
 
 import reactor.core.CoreSubscriber;
-import reactor.util.context.Context;
 
-public class NRCoreSubscriber<T> implements CoreSubscriber<T> {
+public class NRCoreSubscriber implements CoreSubscriber<CoreEvent> {
 	
-	private CoreSubscriber<T> delegate = null;
+	private CoreSubscriber<? super CoreEvent> delegate = null;
+	
 	private static boolean isTransformed = false;
 	
-	public NRCoreSubscriber(CoreSubscriber<T> cs) {
-		
-		delegate = cs;
+	public NRCoreSubscriber(CoreSubscriber<? super CoreEvent> d) {
+		delegate = d;
 		if(!isTransformed) {
-			isTransformed = true;
 			AgentBridge.instrumentation.retransformUninstrumentedClass(getClass());
+			isTransformed = true;
 		}
 	}
-	
-
-	public Context currentContext()
-	{
-		return this.delegate.currentContext();
-	}
-
 
 	@Override
 	@Trace(async=true)
-	public void onNext(T t) {
-		if(CoreEvent.class.isInstance(t)) {
-			CoreEvent event = (CoreEvent)t;
-			String corrId = event.getCorrelationId();
-			if(MuleUtils.hasToken(corrId)) {
-				Token token = MuleUtils.getToken(corrId);
-				token.link();
-			}
+	public void onNext(CoreEvent t) {
+		Token token = MuleUtils.getToken(t);
+		
+		if(token != null) {
+			token.link();
 		}
+		NewRelic.getAgent().getLogger().log(Level.FINE, "in NRCoreSubscriber.onNext({0}), token = {1}",t,token);
+	
 		delegate.onNext(t);
 	}
 
 	@Override
+	@Trace(async=true)
 	public void onError(Throwable t) {
-		NewRelic.noticeError(t);
 		delegate.onError(t);
 	}
 
 	@Override
+	@Trace(async=true)
 	public void onComplete() {
 		delegate.onComplete();
 	}
