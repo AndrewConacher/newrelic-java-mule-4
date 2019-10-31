@@ -3,6 +3,7 @@ package org.mule.runtime.core.api.processor;
 import org.mule.runtime.core.api.event.CoreEvent;
 import org.mule.runtime.core.internal.event.MuleUtils;
 
+import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Token;
 import com.newrelic.api.agent.Trace;
 import com.newrelic.api.agent.weaver.MatchType;
@@ -17,6 +18,9 @@ public abstract class Sink {
 		Token token = MuleUtils.getToken(event);
 		if(token != null) {
 			token.link();
+		} else {
+			token = NewRelic.getAgent().getTransaction().getToken();
+			MuleUtils.setToken(event, token);
 		}
 		boolean returned = Weaver.callOriginal();
 		

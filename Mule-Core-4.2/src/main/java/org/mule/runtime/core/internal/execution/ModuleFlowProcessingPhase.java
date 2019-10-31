@@ -41,7 +41,7 @@ public abstract class ModuleFlowProcessingPhase {
 	@SuppressWarnings("unused")
 	private Consumer<CoreEvent> onMessageReceived(ModuleFlowProcessingPhaseTemplate template,MessageProcessContext messageProcessContext, FlowConstruct flowConstruct) {
 		Consumer<CoreEvent> consumer = Weaver.callOriginal();
-		NREventConsumer nrConsumer = new NREventConsumer();
+		NREventConsumer nrConsumer = new NREventConsumer("MessageRecieved");
 		return nrConsumer.andThen(consumer);
 	}
 	

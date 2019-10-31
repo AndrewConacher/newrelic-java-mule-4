@@ -20,13 +20,18 @@ public class NRBiConsumer implements BiConsumer<HttpResponse, Throwable> {
 
 	@Override
 	public void accept(HttpResponse t, Throwable u) {
+		InboundWrapper wrapper = null;
 		if(u != null) {
 			NewRelic.noticeError(u);
 		} else if(t != null) {
-			
+			 wrapper = new InboundWrapper(t);
 		}
-		InboundWrapper wrapper = new InboundWrapper(t);
-		HttpParameters p = HttpParameters.library(params.getLibrary()).uri(params.getUri()).procedure(params.getProcedure()).inboundHeaders(wrapper).build();
+		HttpParameters p = null;
+		if(wrapper != null) {
+			p = HttpParameters.library(params.getLibrary()).uri(params.getUri()).procedure(params.getProcedure()).inboundHeaders(wrapper).build();
+		} else {
+			p = HttpParameters.library(params.getLibrary()).uri(params.getUri()).procedure(params.getProcedure()).noInboundHeaders().build();
+		}
 		if(segment != null) {
 			segment.reportAsExternal(p);
 			segment.end();

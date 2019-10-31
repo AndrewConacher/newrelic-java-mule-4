@@ -17,7 +17,7 @@ public class AbstractProcessingStrategy {
 		if(NREventConsumer.class.isInstance(consumer)) {
 			return consumer;
 		} else {
-			NREventConsumer wrapper = new NREventConsumer();
+			NREventConsumer wrapper = new NREventConsumer("ProcessingStrategy-Create");
 			return consumer.andThen(wrapper);
 		}
 	}
