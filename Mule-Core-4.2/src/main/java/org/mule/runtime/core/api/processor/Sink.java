@@ -15,6 +15,7 @@ public abstract class Sink {
 
 	@Trace(async=true)
 	public boolean emit(CoreEvent event) {
+		NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","Sink",getClass().getSimpleName(),"emit"});
 		Token token = MuleUtils.getToken(event);
 		if(token != null) {
 			token.link();
@@ -25,5 +26,18 @@ public abstract class Sink {
 		boolean returned = Weaver.callOriginal();
 		
 		return returned;
+	}
+	
+	@Trace(async=true)
+	public void accept(final CoreEvent event) {
+		NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","Sink",getClass().getSimpleName(),"accept"});
+		Token token = MuleUtils.getToken(event);
+		if(token != null) {
+			token.link();
+		} else {
+			token = NewRelic.getAgent().getTransaction().getToken();
+			MuleUtils.setToken(event, token);
+		}
+		Weaver.callOriginal();
 	}
 }

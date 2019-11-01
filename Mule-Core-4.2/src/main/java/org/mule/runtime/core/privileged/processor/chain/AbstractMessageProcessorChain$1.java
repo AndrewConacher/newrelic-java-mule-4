@@ -14,9 +14,11 @@ import com.newrelic.api.agent.weaver.Weaver;
 @Weave
 abstract class AbstractMessageProcessorChain$1 {
 	
+	final org.mule.runtime.core.privileged.processor.chain.AbstractMessageProcessorChain this$0 = Weaver.callOriginal();
+	
 	@Trace(async=true)
 	public void onNext(final CoreEvent event) {
-		NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","MessageProcessorChain","onNext"});
+		NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","MessageProcessorChain","onNext",this$0.chainName});
 		Token token = MuleUtils.getToken(event);
 		if(token != null) {
 			token.link();
