@@ -1,4 +1,4 @@
-package org.mule.runtime.core.privileged.processor;
+package org.mule.runtime.core.internal.processor;
 
 import java.lang.reflect.Method;
 

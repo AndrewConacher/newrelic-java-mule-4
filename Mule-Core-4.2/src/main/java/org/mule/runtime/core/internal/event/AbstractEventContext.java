@@ -47,8 +47,9 @@ abstract class AbstractEventContext implements BaseEventContext {
 	}
 	
 	private void expireParent(Optional<BaseEventContext> parent) {
-		if(parent.isPresent()) {
-			BaseEventContext parentCtx = parent.get();
+		Optional<BaseEventContext> current = parent;
+		while(current.isPresent()) {
+			BaseEventContext parentCtx = current.get();
 			if(parentCtx != null && (AbstractEventContext.class.isInstance(parentCtx))) {
 				AbstractEventContext aCtx = (AbstractEventContext)parentCtx;
 				if(aCtx.token != null) {
@@ -56,6 +57,11 @@ abstract class AbstractEventContext implements BaseEventContext {
 					aCtx.token = null;
 				}
 				
+			}
+			if(AbstractEventContext.class.isInstance(parentCtx)) {
+				current = ((AbstractEventContext)parentCtx).getParentContext();
+			} else {
+				current = Optional.empty();
 			}
 		}
 	}
