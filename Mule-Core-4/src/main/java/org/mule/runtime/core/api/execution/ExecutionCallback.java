@@ -10,6 +10,7 @@ import com.newrelic.api.agent.weaver.Weaver;
 
 @Weave(type=MatchType.Interface)
 public abstract class ExecutionCallback<T> {
+	
 	@NewField
 	public Token token = null;
 

@@ -12,31 +12,31 @@ import org.reactivestreams.Publisher;
 import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Token;
 import com.newrelic.api.agent.Trace;
-import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.NewField;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
 
-@Weave(type=MatchType.BaseClass)
-abstract class AbstractEventContext  implements BaseEventContext {
+@Weave
+abstract class AbstractEventContext implements BaseEventContext {
 	
 	@NewField
 	public Token token = null;
-
+	
 	public AbstractEventContext() {
-
+		
 	}
-
-	public AbstractEventContext(FlowExceptionHandler exceptionHandler) {
+	
+	public AbstractEventContext(final FlowExceptionHandler exceptionHandler) {
+		
 	}
-
-	public AbstractEventContext(FlowExceptionHandler exceptionHandler, int depthLevel,Optional<CompletableFuture<Void>> externalCompletion) {
+	
+	public AbstractEventContext(final FlowExceptionHandler exceptionHandler, final int depthLevel,final Optional<CompletableFuture<Void>> externalCompletion) {
 		token = NewRelic.getAgent().getTransaction().getToken();
 	}
-
+	
 	public abstract Optional<BaseEventContext> getParentContext();
 
-	@Trace(async=true)
+	@Trace(async=true,excludeFromTransactionTrace=true)
 	public void success() {
 		if(token != null) {
 			token.linkAndExpire();
@@ -47,8 +47,9 @@ abstract class AbstractEventContext  implements BaseEventContext {
 	}
 	
 	private void expireParent(Optional<BaseEventContext> parent) {
-		if(parent.isPresent()) {
-			BaseEventContext parentCtx = parent.get();
+		Optional<BaseEventContext> current = parent;
+		while(current.isPresent()) {
+			BaseEventContext parentCtx = current.get();
 			if(parentCtx != null && (AbstractEventContext.class.isInstance(parentCtx))) {
 				AbstractEventContext aCtx = (AbstractEventContext)parentCtx;
 				if(aCtx.token != null) {
@@ -57,10 +58,15 @@ abstract class AbstractEventContext  implements BaseEventContext {
 				}
 				
 			}
+			if(AbstractEventContext.class.isInstance(parentCtx)) {
+				current = ((AbstractEventContext)parentCtx).getParentContext();
+			} else {
+				current = Optional.empty();
+			}
 		}
 	}
 
-	@Trace(async=true)
+	@Trace(async=true,excludeFromTransactionTrace=true)
 	public void success(CoreEvent event) {
 		if(token != null) {
 			token.linkAndExpire();
@@ -81,7 +87,7 @@ abstract class AbstractEventContext  implements BaseEventContext {
 		Weaver.callOriginal();
 	}
 
-	@Trace(async=true)
+	@Trace(async=true,excludeFromTransactionTrace=true)
 	public Publisher<Void> error(Throwable throwable) {
 		if(token != null) {
 			token.linkAndExpire();
@@ -91,5 +97,6 @@ abstract class AbstractEventContext  implements BaseEventContext {
 		NewRelic.noticeError(throwable);
 		return Weaver.callOriginal();
 	}
+
 
 }

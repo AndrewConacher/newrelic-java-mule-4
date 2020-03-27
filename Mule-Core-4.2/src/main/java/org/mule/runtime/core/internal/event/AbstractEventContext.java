@@ -36,7 +36,7 @@ abstract class AbstractEventContext implements BaseEventContext {
 	
 	public abstract Optional<BaseEventContext> getParentContext();
 
-	@Trace(async=true)
+	@Trace(async=true,excludeFromTransactionTrace=true)
 	public void success() {
 		if(token != null) {
 			token.linkAndExpire();
@@ -66,7 +66,7 @@ abstract class AbstractEventContext implements BaseEventContext {
 		}
 	}
 
-	@Trace(async=true)
+	@Trace(async=true,excludeFromTransactionTrace=true)
 	public void success(CoreEvent event) {
 		if(token != null) {
 			token.linkAndExpire();
@@ -87,7 +87,7 @@ abstract class AbstractEventContext implements BaseEventContext {
 		Weaver.callOriginal();
 	}
 
-	@Trace(async=true)
+	@Trace(async=true,excludeFromTransactionTrace=true)
 	public Publisher<Void> error(Throwable throwable) {
 		if(token != null) {
 			token.linkAndExpire();

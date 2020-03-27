@@ -12,7 +12,12 @@ public class MuleUtils {
 		EventContext context = event.getContext();
 		if(AbstractEventContext.class.isInstance(context)) {
 			return ((AbstractEventContext)context).token;
-		} 
+		}
+//		if(BaseEventDecorator.class.isInstance(event)) {
+//			BaseEventDecorator bEvent = (BaseEventDecorator)event;
+//			InternalEvent tmpEvent = bEvent.getEvent();
+//			return getToken(tmpEvent);
+//		}
 		return null;
 	}
 	
@@ -29,5 +34,5 @@ public class MuleUtils {
 			}
 		}
 			
-	}	
+	}
 }

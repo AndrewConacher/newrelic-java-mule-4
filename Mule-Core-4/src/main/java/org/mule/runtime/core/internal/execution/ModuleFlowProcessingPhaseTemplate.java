@@ -14,12 +14,11 @@ public abstract class ModuleFlowProcessingPhaseTemplate {
 
 	@Trace(async=true)
 	public CoreEvent routeEvent(CoreEvent event) {
-		
+
 		Token token = MuleUtils.getToken(event);
 		if(token != null) {
 			token.link();
 		}
-		
 		CoreEvent returnedEvent = Weaver.callOriginal();
 
 		MuleUtils.setToken(returnedEvent, token);
