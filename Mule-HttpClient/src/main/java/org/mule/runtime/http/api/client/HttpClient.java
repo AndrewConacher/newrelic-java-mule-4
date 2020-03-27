@@ -3,6 +3,7 @@ package org.mule.runtime.http.api.client;
 import java.net.URI;
 import java.util.concurrent.CompletableFuture;
 
+import org.mule.runtime.api.util.OutboundWrapper;
 import org.mule.runtime.http.api.client.auth.HttpAuthentication;
 import org.mule.runtime.http.api.domain.message.request.HttpRequest;
 import org.mule.runtime.http.api.domain.message.response.HttpResponse;
@@ -15,7 +16,6 @@ import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
 import com.nr.instrumentation.mule.httpclient.InboundWrapper;
 import com.nr.instrumentation.mule.httpclient.NRBiConsumer;
-import com.nr.instrumentation.mule.httpclient.OutboundWrapper;
 
 @Weave(type=MatchType.Interface)
 public abstract class HttpClient {

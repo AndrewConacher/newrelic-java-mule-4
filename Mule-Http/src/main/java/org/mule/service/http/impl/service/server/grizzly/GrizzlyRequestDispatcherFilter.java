@@ -23,6 +23,7 @@ public abstract class GrizzlyRequestDispatcherFilter {
 
 	@Trace(dispatcher=true)
 	public NextAction handleRead(final FilterChainContext ctx) {
+		
 		Transaction txn = NewRelic.getAgent().getTransaction();
 		if(!txn.isWebTransaction()) {
 			txn.convertToWebTransaction();
@@ -33,6 +34,7 @@ public abstract class GrizzlyRequestDispatcherFilter {
 			InboundRequest wrapper = new InboundRequest(request);
 			txn.setWebRequest(wrapper);
 		}
+		NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","GrizzlyRequestDispatcherFilter","handleRead",ctx.getMessage().getClass().getSimpleName()});
 		return Weaver.callOriginal();
 	}
 }

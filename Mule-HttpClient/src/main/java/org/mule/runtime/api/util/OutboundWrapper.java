@@ -1,10 +1,10 @@
-package com.nr.instrumentation.mule.httpclient;
+package org.mule.runtime.api.util;
+
+import org.mule.runtime.http.api.domain.message.request.HttpRequest;
 
 import com.newrelic.api.agent.HeaderType;
 import com.newrelic.api.agent.OutboundHeaders;
 
-import org.mule.runtime.api.util.MultiMap;
-import org.mule.runtime.http.api.domain.message.request.HttpRequest;
 
 public class OutboundWrapper implements OutboundHeaders {
 	

@@ -5,7 +5,7 @@ dependencies {
     // Declare a dependency on each JAR you want to instrument:
     //compile 'org.apache.httpcomponents:httpclient:4.3.0'
 	//compile group: 'org.mule.runtime', name: 'mule-extensions-api', version: '1.1.4'
-	//compile group: 'org.mule.connectors', name: 'mule-http-connector', version: '1.4.1'
+//	compile group: 'org.mule.connectors', name: 'mule-http-connector', version: '1.4.1'
 	
     compile 'com.newrelic.agent.java:newrelic-api:4.7.0'
     compile 'com.newrelic.agent.java:newrelic-weaver-api:4.7.0'
