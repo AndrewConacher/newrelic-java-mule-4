@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: com.newrelic.instrumentation.MuleHttp-Runtime
-Implementation-Vendor: com.newrelic
-Implementation-Version: 1.0
-
