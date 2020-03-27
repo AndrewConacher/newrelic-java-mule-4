@@ -10,7 +10,7 @@ import com.newrelic.api.agent.weaver.Weaver;
 @Weave
 abstract class DefaultSourceCallback<T, A> {
 
-	@Trace
+	@Trace(dispatcher=true)
 	public void handle(Result<T, A> result, SourceCallbackContext context) {
 		Weaver.callOriginal();
 	}
