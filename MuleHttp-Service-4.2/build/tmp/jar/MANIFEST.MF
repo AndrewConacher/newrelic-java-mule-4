@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: com.newrelic.instrumentation.MuleHttp-Service-4.
- 2
-Implementation-Vendor: com.newrelic
-Implementation-Version: 1.0
-

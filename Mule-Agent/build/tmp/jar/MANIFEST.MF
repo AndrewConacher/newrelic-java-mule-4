@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: com.newrelic.instrumentation.Mule-Agent
-Implementation-Vendor: com.newrelic
-Implementation-Version: 1.0
-
