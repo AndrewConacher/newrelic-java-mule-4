@@ -30,7 +30,7 @@ abstract class AbstractEventContext implements BaseEventContext {
 		
 	}
 	
-	public AbstractEventContext(final FlowExceptionHandler exceptionHandler, final int depthLevel,final Optional<CompletableFuture<Void>> externalCompletion) {
+	public AbstractEventContext(FlowExceptionHandler exceptionHandler, Optional<CompletableFuture<Void>> externalCompletion) {
 		token = NewRelic.getAgent().getTransaction().getToken();
 	}
 	
