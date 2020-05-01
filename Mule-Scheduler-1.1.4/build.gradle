@@ -1,0 +1,64 @@
+
+buildscript {
+    repositories {
+        maven {
+            url 'https://pdx-artifacts.pdx.vm.datanerd.us/repo'
+        }
+    }
+
+    dependencies {
+        classpath 'com.newrelic.agent.java:gradle-verify-instrumentation-plugin:1.3'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'gradle-verify-instrumentation-plugin'
+
+repositories {
+    jcenter()
+
+    maven {
+        url 'https://pdx-artifacts.pdx.vm.datanerd.us/repo'
+    }
+}
+
+repositories {
+  maven { url 'http://pdx-artifacts.pdx.vm.datanerd.us/repo' }
+  maven { url 'https://plugins.gradle.org/m2/' }
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+compileTestJava {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+
+
+dependencies {
+    // Declare a dependency on each JAR you want to instrument:
+    //compile 'org.apache.httpcomponents:httpclient:4.3.0'
+	compile 'org.mule.services:mule-service-scheduler:1.1.4'
+	
+    compile 'com.newrelic.agent.java:newrelic-api:4.7.0'
+    compile 'com.newrelic.agent.java:newrelic-weaver-api:4.7.0'
+
+    compile 'com.newrelic.agent.java:agent-bridge:4.7.0'
+//    compile fileTree(dir: 'lib', includes: ['*.jar'])
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'com.newrelic.instrumentation.Mule-Scheduler'
+        attributes 'Implementation-Vendor': 'com.newrelic', 'Implementation-Version': 1.0
+    }
+}
+
+verifyInstrumentation {
+	passes 'org.mule.services:mule-service-scheduler:[1.1.4,)'
+    excludeRegex '.*MULE.*'
+    excludeRegex '.*SNAPSHOT'
+    excludeRegex '.*-M.*'
+}

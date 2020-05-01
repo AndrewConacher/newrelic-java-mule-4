@@ -16,12 +16,12 @@ abstract class AbstractRunnableFutureDecorator<V> {
 	@NewField
 	protected Token token = null;
 
-	protected AbstractRunnableFutureDecorator(final int id, final ClassLoader classLoader) {
+	protected AbstractRunnableFutureDecorator(Integer id)  {
 		token = NewRelic.getAgent().getTransaction().getToken();
 	}
 	
 	@Trace(async=true)
-	protected void doRun(final RunnableFuture<V> task) {
+	protected void doRun(RunnableFuture<V> task, ClassLoader classLoader)  {
 		String name = getName();
 		if(name != null && !name.isEmpty()) {
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","RunnableFutureDecorator",name});

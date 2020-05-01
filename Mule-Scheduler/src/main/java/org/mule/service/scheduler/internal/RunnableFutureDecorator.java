@@ -10,8 +10,9 @@ import com.newrelic.api.agent.weaver.Weaver;
 @Weave
 abstract class RunnableFutureDecorator<V> extends AbstractRunnableFutureDecorator<V> {
 
-	RunnableFutureDecorator(RunnableFuture<V> task, ClassLoader classLoader,DefaultScheduler scheduler, String taskAsString, int id) {
-		super(id, classLoader);
+	RunnableFutureDecorator(RunnableFuture<V> task, ClassLoader classLoader, DefaultScheduler scheduler, String taskAsString,
+            Integer id) {
+		super(id);
 	}
 	
 	@Trace(async=true)
