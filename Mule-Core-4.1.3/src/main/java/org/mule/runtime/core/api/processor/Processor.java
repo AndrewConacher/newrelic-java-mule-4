@@ -16,9 +16,9 @@ public abstract class Processor {
 
 	@Trace(async=true)
 	public CoreEvent process(CoreEvent event) {
-//		if(!MuleReactorUtils.initialized) {
-//			MuleReactorUtils.init();
-//		}
+		if(!MuleReactorUtils.initialized) {
+			MuleReactorUtils.init();
+		}
 		Token token = MuleUtils.getToken(event);
 		if(token != null) {
 			token.link();

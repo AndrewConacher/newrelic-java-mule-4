@@ -14,33 +14,33 @@ import reactor.util.context.Context;
 @Weave
 class AbstractMessageProcessorChain$1 {
 	
-	@Trace(dispatcher=true)
-	public void onNext(final CoreEvent event) {
-		Token token = MuleUtils.getToken(event);
-		if(token != null) {
-			token.link();
-		}
-		Weaver.callOriginal();
-	}
-
-	@Trace(dispatcher=true)
-	public void onError(final Throwable throwable) {
-	
-		Weaver.callOriginal();
-	}
-
-	@Trace(dispatcher=true)
-	public void onComplete() {
-		Weaver.callOriginal();
-	}
-
-	public Context currentContext() {
-		return Weaver.callOriginal();
-	}
-
-	@Trace(dispatcher=true)
-	public void onSubscribe(final Subscription s) {
-		Weaver.callOriginal();
-	}
+//	@Trace(dispatcher=true)
+//	public void onNext(final CoreEvent event) {
+//		Token token = MuleUtils.getToken(event);
+//		if(token != null) {
+//			token.link();
+//		}
+//		Weaver.callOriginal();
+//	}
+//
+//	@Trace(dispatcher=true)
+//	public void onError(final Throwable throwable) {
+//	
+//		Weaver.callOriginal();
+//	}
+//
+//	@Trace(dispatcher=true)
+//	public void onComplete() {
+//		Weaver.callOriginal();
+//	}
+//
+//	public Context currentContext() {
+//		return Weaver.callOriginal();
+//	}
+//
+//	@Trace(dispatcher=true)
+//	public void onSubscribe(final Subscription s) {
+//		Weaver.callOriginal();
+//	}
 	
 }
