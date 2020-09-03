@@ -12,6 +12,9 @@ public abstract class ExecutionTemplate<T> {
 	@Trace(dispatcher=true)
 	public T execute(ExecutionCallback<T> callback) {
 		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","ExecutionTemplate",getClass().getName());
+		if(callback.token == null) {
+			callback.token = NewRelic.getAgent().getTransaction().getToken();
+		}
 		return Weaver.callOriginal();
 	}
 }

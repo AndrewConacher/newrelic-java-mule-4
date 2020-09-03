@@ -6,7 +6,7 @@ import org.mule.runtime.core.privileged.execution.MessageProcessContext;
 import org.mule.runtime.core.privileged.execution.MessageProcessTemplate;
 
 import com.newrelic.api.agent.NewRelic;
-import com.newrelic.api.agent.Segment;
+import com.newrelic.api.agent.Token;
 import com.newrelic.api.agent.Trace;
 import com.newrelic.api.agent.weaver.NewField;
 import com.newrelic.api.agent.weaver.Weave;
@@ -41,10 +41,14 @@ public abstract class PhaseExecutionEngine {
 				final MessageProcessContext messageProcessContext) {
 			
 		}
+		
+		@NewField
+		private String name = null;
 
 		@NewField
-		private Segment segment = null;
+		private Token token = null;
 		
+		@Trace
 		public void process() {
 			if(messageProcessContext != null) {
 				MessageSource source = messageProcessContext.getMessageSource();
@@ -53,17 +57,24 @@ public abstract class PhaseExecutionEngine {
 					if(location != null) {
 						String tmp = location.getLocation();
 						if(tmp != null && !tmp.isEmpty()) {
-							segment = NewRelic.getAgent().getTransaction().startSegment("Phase-"+tmp);
+							token = NewRelic.getAgent().getTransaction().getToken();
+							name = "Phase-"+tmp;
 						}
 					}
 				}
 			}
 			Weaver.callOriginal();
 		}
-		
-		@SuppressWarnings("unused")
+
+		@Trace(async=true)
 		private void processEndPhase() {
-			segment.end();
+			if(token != null) {
+				token.linkAndExpire();
+				token = null;
+			}
+			if(name != null) {
+				NewRelic.getAgent().getTracedMethod().setMetricName("Custom","PhaseExecution","EndPhase",name);
+			}
 			Weaver.callOriginal();
 		}
 	}

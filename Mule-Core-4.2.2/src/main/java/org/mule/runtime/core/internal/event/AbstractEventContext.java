@@ -35,7 +35,7 @@ abstract class AbstractEventContext implements BaseEventContext {
 	}
 	
 	public abstract Optional<BaseEventContext> getParentContext();
-	
+
 	void addChildContext(final BaseEventContext childContext) {
 		if(token == null) {
 			setToken();
@@ -124,11 +124,11 @@ abstract class AbstractEventContext implements BaseEventContext {
 		return Weaver.callOriginal();
 	}
 
-
 	private void setToken() {
 		Token t = NewRelic.getAgent().getTransaction().getToken();
 		if(t != null && t.isActive()) {
 			token = t;
 		}
 	}
+
 }

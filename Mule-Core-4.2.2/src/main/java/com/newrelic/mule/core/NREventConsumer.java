@@ -34,16 +34,6 @@ public class NREventConsumer implements Consumer<CoreEvent> {
 		Token token = MuleUtils.getToken(event);
 		if(token != null) {
 			token.link();
-		}  else {
-			token = NewRelic.getAgent().getTransaction().getToken();
-			if(token != null) {
-				if(token.isActive()) {
-					MuleUtils.setToken(event, token);
-				} else {
-					token.expire();
-					token = null;
-				}
-			}
 		}
 		if(name != null) {
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","EventConsumer",name});

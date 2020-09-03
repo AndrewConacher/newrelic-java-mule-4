@@ -2,7 +2,6 @@ package org.mule.runtime.core.privileged.processor.chain;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 
 import org.mule.runtime.core.api.event.CoreEvent;
 import org.mule.runtime.core.api.processor.Processor;
@@ -29,8 +28,6 @@ class AbstractMessageProcessorChain {
 
 	@Trace(dispatcher=true)
 	public CoreEvent process(final CoreEvent event) {
-//		Exception e = new Exception("call to AbstractMessageProcessorChain");
-//		NewRelic.getAgent().getLogger().log(Level.FINE, e, "call to {0}.process({1})", getClass().getName(),event);
 		NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","MuleProcessorChain",getClass().getSimpleName(),"process",chainName});
 		CoreEvent retValue = Weaver.callOriginal();
 		return retValue;
