@@ -15,15 +15,12 @@ import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
 import com.nr.instrumentation.mule.http.InboundWrapper;
 import com.nr.instrumentation.mule.http.NRBiConsumer;
-import com.nr.instrumentation.mule.http.OutboundWrapper;
 
 @Weave(type=MatchType.Interface)
 public abstract class HttpClient {
 
 	@Trace
 	public HttpResponse send(HttpRequest request, int responseTimeout, boolean followRedirects, HttpAuthentication authentication) {
-		OutboundWrapper wrapper = new OutboundWrapper(request);
-		NewRelic.getAgent().getTracedMethod().addOutboundRequestHeaders(wrapper);
 		HttpResponse response = Weaver.callOriginal();
 		
 		InboundHeaders inboundHeaders = new InboundWrapper(response);

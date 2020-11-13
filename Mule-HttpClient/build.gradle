@@ -1,0 +1,23 @@
+
+apply plugin: 'java'
+
+dependencies {
+    compile 'org.mule.runtime:mule-service-http-api:4.1.4'
+    
+
+    compile 'com.newrelic.agent.java:newrelic-api:4.7.0'
+    compile 'com.newrelic.agent.java:newrelic-weaver-api:4.7.0'
+
+    compile 'com.newrelic.agent.java:agent-bridge:4.7.0'
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'com.newrelic.instrumentation.Mule-HttpClient'
+        attributes 'Implementation-Vendor': 'com.newrelic', 'Implementation-Version': 1.0
+    }
+}
+
+verifyInstrumentation {
+   passes 'org.mule.runtime:mule-service-http-api:[4.1.0,)'
+}

@@ -14,6 +14,7 @@ import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
 import com.nr.instrumentation.mule.http.InboundRequest;
  
+@SuppressWarnings("unused")
 @Weave
 public abstract class GrizzlyRequestDispatcherFilter {
 	
