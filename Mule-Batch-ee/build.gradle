@@ -1,0 +1,24 @@
+
+apply plugin: 'java'
+
+dependencies {
+    compile 'com.mulesoft.mule.runtime.modules:mule-module-batch-ee:4.2.1'
+    
+	//compile fileTree(dir: 'lib', includes: ['*.jar'])    
+    compile 'com.newrelic.agent.java:newrelic-api:5.1.0'
+    compile 'com.newrelic.agent.java:newrelic-weaver-api:5.1.0'
+
+    compile 'com.newrelic.agent.java:agent-bridge:5.1.0'
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'com.newrelic.instrumentation.Mule-Batch-ee'
+        attributes 'Implementation-Vendor': 'com.newrelic', 'Implementation-Version': 1.0
+    }
+}
+
+verifyInstrumentation {
+  // See Verifier plugin documentation:
+  // https://source.datanerd.us/java-agent/gradle-verify-instrumentation-plugin
+}
