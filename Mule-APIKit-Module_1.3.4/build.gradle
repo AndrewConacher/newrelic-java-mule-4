@@ -1,0 +1,29 @@
+
+apply plugin: 'java'
+
+dependencies {
+    compile group: 'org.mule.runtime', name: 'mule-core', version: '4.3.0'
+    compile 'org.mule.modules:mule-apikit-module:1.3.4:mule-plugin'
+    	  
+    compile 'com.newrelic.agent.java:newrelic-api:5.1.0'
+    compile 'com.newrelic.agent.java:newrelic-weaver-api:5.1.0'
+
+    compile 'com.newrelic.agent.java:agent-bridge:5.1.0'
+    
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'com.newrelic.instrumentation.Mule-APIKit-Module_1.3.4'
+        attributes 'Implementation-Vendor': 'com.newrelic', 'Implementation-Version': 1.0
+    }
+}
+
+verifyInstrumentation {
+	passes('org.mule.modules:mule-apikit-module:[1.3.4,)') {
+	   compile('org.mule.runtime:mule-core:4.3.0')
+	   compile('org.mule.modules:mule-apikit-module:1.3.4:mule-plugin')
+	   }
+	excludeRegex '.*BETA.*'
+	excludeRegex '.*RC.*'
+}
