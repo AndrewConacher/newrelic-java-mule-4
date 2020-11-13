@@ -20,6 +20,7 @@ subprojects {
   targetCompatibility = JavaVersion.VERSION_1_8
 
   repositories {
+    mavenLocal()
     maven {
       url 'http://pdx-artifacts.pdx.vm.datanerd.us/repo'
     }
