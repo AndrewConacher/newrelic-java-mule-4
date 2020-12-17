@@ -52,7 +52,7 @@ public abstract class GrizzlyRequestDispatcherFilter {
 	}
 	
 	@Trace
-	private static void lambda$handleRead$1(org.mule.service.http.impl.service.server.grizzly.GrizzlyHttpRequestAdapter adapter, org.glassfish.grizzly.filterchain.FilterChainContext ctx, org.glassfish.grizzly.http.HttpRequestPacket reqPacket, org.mule.runtime.http.api.domain.message.response.HttpResponse resp, org.mule.runtime.http.api.server.async.ResponseStatusCallback callback) {
+	private static void lambda$handleRead$1(org.mule.service.http.impl.service.server.grizzly.GrizzlyHttpRequestAdapter adapter, org.glassfish.grizzly.filterchain.FilterChainContext ctx, org.mule.runtime.http.api.server.RequestHandler handler, org.glassfish.grizzly.http.HttpRequestPacket reqPacket, org.mule.runtime.http.api.domain.message.response.HttpResponse resp, org.mule.runtime.http.api.server.async.ResponseStatusCallback callback) {
 		Weaver.callOriginal();
 	}
 }

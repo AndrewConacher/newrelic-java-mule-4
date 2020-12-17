@@ -1,11 +1,10 @@
 package org.mule.service.http.impl.service.server.grizzly;
 
-import java.util.logging.Level;
-
 import org.glassfish.grizzly.filterchain.FilterChainContext;
 import org.glassfish.grizzly.filterchain.NextAction;
 import org.glassfish.grizzly.http.HttpContent;
 import org.glassfish.grizzly.http.HttpRequestPacket;
+import org.glassfish.grizzly.http.HttpResponsePacket;
 import org.mule.service.http.impl.service.server.RequestHandlerProvider;
 
 import com.newrelic.api.agent.NewRelic;
@@ -15,6 +14,7 @@ import com.newrelic.api.agent.TransactionNamePriority;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
 import com.nr.instrumentation.mule.http.InboundRequest;
+import com.nr.instrumentation.mule.http.ResponseWrapper;
  
 @SuppressWarnings("unused")
 @Weave
@@ -41,18 +41,18 @@ public abstract class GrizzlyRequestDispatcherFilter {
 					if(requestURI.isEmpty()) {
 						requestURI = "Root";
 					}
-					NewRelic.getAgent().getTransaction().setTransactionName(TransactionNamePriority.FRAMEWORK_HIGH, true, "Grizzly", requestURI);
+					NewRelic.getAgent().getTransaction().setTransactionName(TransactionNamePriority.REQUEST_URI, true, "Grizzly", "GrizzlyDispatcher");
 				}
 				InboundRequest wrapper = new InboundRequest(request);
 				txn.setWebRequest(wrapper);
+				HttpResponsePacket response = request.getResponse();
+				NewRelic.getAgent().getTransaction().setWebResponse(new ResponseWrapper(response));
 			}
+			
 		}
 		NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","GrizzlyRequestDispatcherFilter","handleRead",ctx.getMessage().getClass().getSimpleName()});
 		return Weaver.callOriginal();
 	}
 	
-	@Trace
-	private static void lambda$handleRead$1(org.mule.service.http.impl.service.server.grizzly.GrizzlyHttpRequestAdapter adapter, org.glassfish.grizzly.filterchain.FilterChainContext ctx, org.glassfish.grizzly.http.HttpRequestPacket reqPacket, org.mule.runtime.http.api.domain.message.response.HttpResponse resp, org.mule.runtime.http.api.server.async.ResponseStatusCallback callback) {
-		Weaver.callOriginal();
-	}
+	
 }
