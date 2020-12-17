@@ -9,11 +9,11 @@ import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.WeaveAllConstructors;
 import com.newrelic.api.agent.weaver.Weaver;
 
-@Weave(type=MatchType.Interface)
-public abstract class CompletionHandler<E> {
+@Weave(type=MatchType.BaseClass)
+public abstract class EmptyCompletionHandler<E> {
 	
 	@WeaveAllConstructors
-	public CompletionHandler() {
+	public EmptyCompletionHandler() {
 		token = NewRelic.getAgent().getTransaction().getToken();
 	}
 	
