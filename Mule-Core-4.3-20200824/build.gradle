@@ -3,7 +3,7 @@ apply plugin: 'gradle-verify-instrumentation-plugin'
 
 
 dependencies {
-    compile group: 'org.mule.runtime', name: 'mule-core', version: '4.3.0'
+    compile group: 'org.mule.runtime', name: 'mule-core', version: '4.3.0-20200824'
 
     compile 'com.newrelic.agent.java:newrelic-api:4.7.0'
     compile 'com.newrelic.agent.java:newrelic-weaver-api:4.7.0'
@@ -14,13 +14,13 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'com.newrelic.instrumentation.Mule-Core-4.3'
+        attributes 'Implementation-Title': 'com.newrelic.instrumentation.Mule-Core-4.3-20200824'
         attributes 'Implementation-Vendor': 'com.newrelic', 'Implementation-Version': 2.0
     }
 }
 
 verifyInstrumentation {
-    passes 'org.mule.runtime:mule-core:[4.3.0,)'
+    passes 'org.mule.runtime:mule-core:[4.3.0-20200824]'
     excludeRegex '.*MULE.*'
     excludeRegex '.*SNAPSHOT'
 }
