@@ -6,13 +6,12 @@ import org.mule.runtime.core.internal.execution.MessageProcessContext;
 import org.mule.runtime.extension.api.runtime.operation.Result;
 import org.mule.runtime.extension.api.runtime.source.SourceCallbackContext;
 
-import com.newrelic.agent.bridge.AgentBridge;
-import com.newrelic.api.agent.ApplicationNamePriority;
 import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Trace;
 import com.newrelic.api.agent.TransactionNamePriority;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
+import com.nr.instrumentation.mule.extensions.Utils;
 
 @SuppressWarnings("deprecation")
 @Weave
@@ -24,7 +23,7 @@ abstract class DefaultSourceCallback<T, A> {
 
 	@Trace(dispatcher=true)
 	public void handle(Result<T, A> result, SourceCallbackContext context) {
-		AgentBridge.getAgent().getTransaction(false).setApplicationName(ApplicationNamePriority.REQUEST_ATTRIBUTE, applicationName);
+		Utils.addAppName(applicationName);
 		NewRelic.addCustomParameter("Application-Name", applicationName != null ? applicationName : "Unnamed application");
 		NewRelic.addCustomParameter("MuleContext-ID", muleContext.getId());
 		FlowConstruct flowConstruct = messageProcessContext.getFlowConstruct();
