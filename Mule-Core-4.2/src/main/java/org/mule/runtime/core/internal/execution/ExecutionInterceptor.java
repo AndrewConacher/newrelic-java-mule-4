@@ -11,7 +11,7 @@ import com.newrelic.api.agent.weaver.Weaver;
 @Weave(type=MatchType.Interface)
 public abstract class ExecutionInterceptor<T> {
 
-	@Trace(dispatcher=true)
+	@Trace
 	public T execute(ExecutionCallback<T> callback, ExecutionContext executionContext) {
 		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","ExecutionInterceptor",getClass().getName(),"execute");
 		return Weaver.callOriginal();

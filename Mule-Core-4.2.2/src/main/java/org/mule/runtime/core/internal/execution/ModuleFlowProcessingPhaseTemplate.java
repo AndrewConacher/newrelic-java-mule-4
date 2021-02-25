@@ -10,7 +10,7 @@ import com.newrelic.api.agent.weaver.Weaver;
 @Weave(type=MatchType.Interface)
 public abstract class ModuleFlowProcessingPhaseTemplate {
 
-	@Trace(async=true)
+	@Trace
 	public CoreEvent routeEvent(CoreEvent event) {
 
 		CoreEvent returnedEvent = Weaver.callOriginal();
