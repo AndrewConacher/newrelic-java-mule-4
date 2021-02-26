@@ -1,26 +1,33 @@
 apply plugin: 'java'
 apply plugin: 'gradle-verify-instrumentation-plugin'
 
+
 dependencies {
 	compile 'org.mule.runtime:mule-service-http-api:4.1.0'
+	compile 'org.mule.services:mule-service-http:1.1.0'
 	
     compile 'com.newrelic.agent.java:newrelic-api:5.11.0'
     compile 'com.newrelic.agent.java:newrelic-weaver-api:5.11.0'
 
     compile 'com.newrelic.agent.java:agent-bridge:5.11.0'
+    compile 'com.newrelic.agent.java:newrelic-agent:5.11.0'
+    
 //    compile fileTree(dir: 'lib', includes: ['*.jar'])
 }
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'com.newrelic.instrumentation.Mule-Http-Api'
+        attributes 'Implementation-Title': 'com.newrelic.instrumentation.Mule-Http'
         attributes 'Implementation-Vendor': 'com.newrelic', 'Implementation-Version': 1.0
     }
 }
 
 verifyInstrumentation {
-	passes 'org.mule.runtime:mule-service-http-api:[4.1.0,4.2.0)'
-    excludeRegex '.*MULE.*'
-    excludeRegex '.*SNAPSHOT'
+	passes("org.mule.services:mule-service-http:[1.1.0,1.2.0)") {
+	compile 'org.mule.runtime:mule-service-http-api:4.1.0'
+	}
+	excludeRegex '.*MULE.*'
+    excludeRegex '.*SNAPSHOT.*'
     excludeRegex '.*-M.*'
+	
 }

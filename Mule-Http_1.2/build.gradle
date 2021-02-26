@@ -3,7 +3,7 @@ apply plugin: 'gradle-verify-instrumentation-plugin'
 
 
 dependencies {
-	compile 'org.mule.runtime:mule-service-http-api:4.1.0'
+	compile 'org.mule.runtime:mule-service-http-api:4.1.5'
 	compile 'org.mule.services:mule-service-http:1.2.0'
 	
     compile 'com.newrelic.agent.java:newrelic-api:5.11.0'
@@ -23,8 +23,8 @@ jar {
 }
 
 verifyInstrumentation {
-	passes("org.mule.services:mule-service-http:[1.2.0,1.4.0)") {
-	compile 'org.mule.runtime:mule-service-http-api:4.1.0'
+	passes("org.mule.services:mule-service-http:[1.2.0,1.4.0]") {
+	compile 'org.mule.runtime:mule-service-http-api:4.1.5'
 	}
 	excludeRegex '.*MULE.*'
     excludeRegex '.*SNAPSHOT.*'
